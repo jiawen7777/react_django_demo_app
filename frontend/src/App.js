@@ -48,7 +48,7 @@ class App extends React.Component {
   fetchTasks(){
     console.log('Fetching...')
 
-    fetch('http://127.0.0.1:8000/api/task-list/')
+    fetch('http://127.0.0.1:8002/api/task/')
     .then(response => response.json())
     .then(data => 
       this.setState({
@@ -77,10 +77,11 @@ class App extends React.Component {
 
     var csrftoken = this.getCookie('csrftoken')
 
-    var url = 'http://127.0.0.1:8000/api/task-create/'
-
-    if(this.state.editing == true){
-      url = `http://127.0.0.1:8000/api/task-update/${ this.state.activeItem.id}/`
+    var url = 'http://127.0.0.1:8002/api/task/'
+    var method = "POST"
+    if(this.state.editing === true){
+      url = `http://127.0.0.1:8002/api/task/${this.state.activeItem.id}/`
+      method = "PUT"
       this.setState({
         editing:false
       })
@@ -89,24 +90,26 @@ class App extends React.Component {
 
 
     fetch(url, {
-      method:'POST',
-      headers:{
-        'Content-type':'application/json',
-        'X-CSRFToken':csrftoken,
+      method: method,
+      headers: {
+        "Content-type": "application/json",
+        "X-CSRFToken": csrftoken,
       },
-      body:JSON.stringify(this.state.activeItem)
-    }).then((response)  => {
-        this.fetchTasks()
-        this.setState({
-           activeItem:{
-          id:null, 
-          title:'',
-          completed:false,
-        }
-        })
-    }).catch(function(error){
-      console.log('ERROR:', error)
+      body: JSON.stringify(this.state.activeItem),
     })
+      .then((response) => {
+        this.fetchTasks();
+        this.setState({
+          activeItem: {
+            id: null,
+            title: "",
+            completed: false,
+          },
+        });
+      })
+      .catch(function (error) {
+        console.log("ERROR:", error);
+      });
 
   }
 
@@ -121,7 +124,7 @@ class App extends React.Component {
   deleteItem(task){
     var csrftoken = this.getCookie('csrftoken')
 
-    fetch(`http://127.0.0.1:8000/api/task-delete/${task.id}/`, {
+    fetch(`http://127.0.0.1:8002/api/task/${task.id}/`, {
       method:'DELETE',
       headers:{
         'Content-type':'application/json',
@@ -138,10 +141,10 @@ class App extends React.Component {
 
     task.completed = !task.completed
     var csrftoken = this.getCookie('csrftoken')
-    var url = `http://127.0.0.1:8000/api/task-update/${task.id}/`
+    var url = `http://127.0.0.1:8002/api/task/${task.id}/`
 
       fetch(url, {
-        method:'POST',
+        method:'PUT',
         headers:{
           'Content-type':'application/json',
           'X-CSRFToken':csrftoken,
@@ -184,7 +187,7 @@ class App extends React.Component {
 
                             <div onClick={() => self.strikeUnstrike(task)} style={{flex:7}}>
 
-                                {task.completed == false ? (
+                                {task.completed === false ? (
                                     <span>{task.title}</span>
 
                                   ) : (

@@ -90,6 +90,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -137,7 +138,7 @@ CORS_ORIGIN_ALLOW_ALL=True
 
 CORS_ORIGIN_WHITELIST = [
 
-    "http://localhost:3000",
+    "http://localhost:3001",
 
 ]
 
